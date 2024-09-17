@@ -1,718 +1,3951 @@
 ---
 swagger: "2.0"
 info:
-  description: "This is a sample server Petstore server.  You can find out more about\
-    \ Swagger at [http://swagger.io](http://swagger.io) or on [irc.freenode.net, #swagger](http://swagger.io/irc/).\
-    \  For this sample, you can use the api key `special-key` to test the authorization\
-    \ filters."
-  version: "1.0.5"
-  title: "Swagger Petstore"
-  termsOfService: "http://swagger.io/terms/"
-  contact:
-    email: "apiteam@swagger.io"
-  license:
-    name: "Apache 2.0"
-    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
-host: "petstore.swagger.io"
-basePath: "/v2"
+  title: Trends 3-in-1 API
+  description: API for Trends 3-in-1
+  version: 1.0.1
+servers:
+- url: https://api.hotelengine.com/api/v2/trends
 tags:
-- name: "pet"
-  description: "Everything about your Pets"
-  externalDocs:
-    description: "Find out more"
-    url: "http://swagger.io"
-- name: "store"
-  description: "Access to Petstore orders"
-- name: "user"
-  description: "Operations about user"
-  externalDocs:
-    description: "Find out more about our store"
-    url: "http://swagger.io"
-schemes:
-- "https"
-- "http"
+- name: General
+- name: Financials
+- name: Bookers
+- name: Travelers
+- name: Departments
+- name: Travel Policies
+- name: Top Locations
+- name: Top Vendors
 paths:
-  /pet/{petId}/uploadImage:
-    post:
-      tags:
-      - "pet"
-      summary: "uploads an image"
-      description: ""
-      operationId: "uploadFile"
-      consumes:
-      - "multipart/form-data"
-      produces:
-      - "application/json"
-      parameters:
-      - name: "petId"
-        in: "path"
-        description: "ID of pet to update"
-        required: true
-        type: "integer"
-        format: "int64"
-      - name: "additionalMetadata"
-        in: "formData"
-        description: "Additional data to pass to server"
-        required: false
-        type: "string"
-      - name: "file"
-        in: "formData"
-        description: "file to upload"
-        required: false
-        type: "file"
-      responses:
-        200:
-          description: "successful operation"
-          schema:
-            $ref: "#/definitions/ApiResponse"
-      security:
-      - petstore_auth:
-        - "write:pets"
-        - "read:pets"
-  /pet:
-    post:
-      tags:
-      - "pet"
-      summary: "Add a new pet to the store"
-      description: ""
-      operationId: "addPet"
-      consumes:
-      - "application/json"
-      - "application/xml"
-      produces:
-      - "application/json"
-      - "application/xml"
-      parameters:
-      - in: "body"
-        name: "body"
-        description: "Pet object that needs to be added to the store"
-        required: true
-        schema:
-          $ref: "#/definitions/Pet"
-      responses:
-        405:
-          description: "Invalid input"
-      security:
-      - petstore_auth:
-        - "write:pets"
-        - "read:pets"
-    put:
-      tags:
-      - "pet"
-      summary: "Update an existing pet"
-      description: ""
-      operationId: "updatePet"
-      consumes:
-      - "application/json"
-      - "application/xml"
-      produces:
-      - "application/json"
-      - "application/xml"
-      parameters:
-      - in: "body"
-        name: "body"
-        description: "Pet object that needs to be added to the store"
-        required: true
-        schema:
-          $ref: "#/definitions/Pet"
-      responses:
-        400:
-          description: "Invalid ID supplied"
-        404:
-          description: "Pet not found"
-        405:
-          description: "Validation exception"
-      security:
-      - petstore_auth:
-        - "write:pets"
-        - "read:pets"
-  /pet/findByStatus:
+  /billboard_metrics:
     get:
       tags:
-      - "pet"
-      summary: "Finds Pets by status"
-      description: "Multiple status values can be provided with comma separated strings"
-      operationId: "findPetsByStatus"
-      produces:
-      - "application/json"
-      - "application/xml"
+      - General
+      summary: Get Trends Summary for the main panel
+      description: Retrieve a summary of trends for the specified date range and report type.
       parameters:
-      - name: "status"
-        in: "query"
-        description: "Status values that need to be considered for filter"
+      - name: start_date
+        in: query
         required: true
-        type: "array"
-        items:
-          type: "string"
+        schema:
+          type: string
+          format: date
+        description: The start date for the summary report (YYYY-MM-DD).
+        example: 2024-01-01
+      - name: end_date
+        in: query
+        required: true
+        schema:
+          type: string
+          format: date
+        description: The end date for the summary report (YYYY-MM-DD).
+        example: 2024-12-31
+      - name: report_type
+        in: query
+        required: true
+        schema:
+          type: string
           enum:
-          - "available"
-          - "pending"
-          - "sold"
-          default: "available"
-        collectionFormat: "multi"
-      responses:
-        200:
-          description: "successful operation"
-          schema:
-            type: "array"
-            items:
-              $ref: "#/definitions/Pet"
-        400:
-          description: "Invalid status value"
-      security:
-      - petstore_auth:
-        - "write:pets"
-        - "read:pets"
-  /pet/findByTags:
-    get:
-      tags:
-      - "pet"
-      summary: "Finds Pets by tags"
-      description: "Multiple tags can be provided with comma separated strings. Use\
-        \ tag1, tag2, tag3 for testing."
-      operationId: "findPetsByTags"
-      produces:
-      - "application/json"
-      - "application/xml"
-      parameters:
-      - name: "tags"
-        in: "query"
-        description: "Tags to filter by"
-        required: true
-        type: "array"
-        items:
-          type: "string"
-        collectionFormat: "multi"
-      responses:
-        200:
-          description: "successful operation"
-          schema:
-            type: "array"
-            items:
-              $ref: "#/definitions/Pet"
-        400:
-          description: "Invalid tag value"
-      security:
-      - petstore_auth:
-        - "write:pets"
-        - "read:pets"
-      deprecated: true
-  /pet/{petId}:
-    get:
-      tags:
-      - "pet"
-      summary: "Find pet by ID"
-      description: "Returns a single pet"
-      operationId: "getPetById"
-      produces:
-      - "application/json"
-      - "application/xml"
-      parameters:
-      - name: "petId"
-        in: "path"
-        description: "ID of pet to return"
-        required: true
-        type: "integer"
-        format: "int64"
-      responses:
-        200:
-          description: "successful operation"
-          schema:
-            $ref: "#/definitions/Pet"
-        400:
-          description: "Invalid ID supplied"
-        404:
-          description: "Pet not found"
-      security:
-      - api_key: []
-    post:
-      tags:
-      - "pet"
-      summary: "Updates a pet in the store with form data"
-      description: ""
-      operationId: "updatePetWithForm"
-      consumes:
-      - "application/x-www-form-urlencoded"
-      produces:
-      - "application/json"
-      - "application/xml"
-      parameters:
-      - name: "petId"
-        in: "path"
-        description: "ID of pet that needs to be updated"
-        required: true
-        type: "integer"
-        format: "int64"
-      - name: "name"
-        in: "formData"
-        description: "Updated name of the pet"
+          - lodging
+          - flights
+          - car_rentals
+          - all_trips
+        description: "The type of report to generate (lodging, flights, car_rentals, all_trips)."
+        example: lodging
+      - name: filter_type
+        in: query
         required: false
-        type: "string"
-      - name: "status"
-        in: "formData"
-        description: "Updated status of the pet"
+        schema:
+          type: string
+          enum:
+          - member
+          - department
+          - travel_policy
+          - custom_field
+        description: "The type of filter to apply (member, department, travel_policy, custom_field)."
+        example: custom_field
+      - name: filter_resource_id
+        in: query
         required: false
-        type: "string"
-      responses:
-        405:
-          description: "Invalid input"
-      security:
-      - petstore_auth:
-        - "write:pets"
-        - "read:pets"
-    delete:
-      tags:
-      - "pet"
-      summary: "Deletes a pet"
-      description: ""
-      operationId: "deletePet"
-      produces:
-      - "application/json"
-      - "application/xml"
-      parameters:
-      - name: "api_key"
-        in: "header"
+        schema:
+          type: integer
+        description: Required if a filter_type is given. The id corresponds to the type of the resource being filtered.
+        example: 123
+      - name: filter_value
+        in: query
         required: false
-        type: "string"
-      - name: "petId"
-        in: "path"
-        description: "Pet id to delete"
-        required: true
-        type: "integer"
-        format: "int64"
-      responses:
-        400:
-          description: "Invalid ID supplied"
-        404:
-          description: "Pet not found"
-      security:
-      - petstore_auth:
-        - "write:pets"
-        - "read:pets"
-  /store/order:
-    post:
-      tags:
-      - "store"
-      summary: "Place an order for a pet"
-      description: ""
-      operationId: "placeOrder"
-      consumes:
-      - "application/json"
-      produces:
-      - "application/json"
-      - "application/xml"
-      parameters:
-      - in: "body"
-        name: "body"
-        description: "order placed for purchasing the pet"
-        required: true
         schema:
-          $ref: "#/definitions/Order"
+          type: string
+        description: Required if a filter_type is custom_field. Identifies the value within the resource. Only applies to the custom_field filter.
+        example: SUMMIT 2024
+      - name: include_cancelled
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: false
+        description: Include bookings that were cancelled.
+        example: "true"
+      - name: include_cancelled
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: false
+        description: Add taxes and fees to spending and ADR.
+        example: "true"
       responses:
-        200:
-          description: "successful operation"
-          schema:
-            $ref: "#/definitions/Order"
-        400:
-          description: "Invalid Order"
-  /store/order/{orderId}:
+        "200":
+          description: A summary of trends.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  spending:
+                    type: object
+                    properties:
+                      value:
+                        type: string
+                        format: decimal
+                        description: The total spend for the specified parameters.
+                        example: "15000.50"
+                      variation:
+                        type: string
+                        format: decimal
+                        description: The variation in total spend compared to the previous period in percentage.
+                        example: "5.25"
+                  savings:
+                    type: object
+                    properties:
+                      value:
+                        type: string
+                        format: decimal
+                        description: The total savings for the specified parameters.
+                        example: "2000.75"
+                      variation:
+                        type: string
+                        format: decimal
+                        description: The variation in savings compared to the previous period in percentage.
+                        example: "3.45"
+                  he_benefits:
+                    type: object
+                    properties:
+                      total:
+                        type: string
+                        format: decimal
+                        description: The total HE benefits.
+                        example: "3000.00"
+                      he_rewards:
+                        type: string
+                        format: decimal
+                        description: The total HE rewards.
+                        example: "1500.00"
+                      flex_savings:
+                        type: string
+                        format: decimal
+                        description: The total flex savings.
+                        example: "800.00"
+                      flex_pro_savings:
+                        type: string
+                        format: decimal
+                        description: The total flex pro savings.
+                        example: "400.00"
+                      travel_credits:
+                        type: string
+                        format: decimal
+                        description: The total travel credits.
+                        example: "300.00"
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden - not an admin
+        "422":
+          description: Unprocessable Entity - bad parameters
+        "500":
+          description: Internal server error
+  /financials/spending_by_date:
     get:
       tags:
-      - "store"
-      summary: "Find purchase order by ID"
-      description: "For valid response try integer IDs with value >= 1 and <= 10.\
-        \ Other values will generated exceptions"
-      operationId: "getOrderById"
-      produces:
-      - "application/json"
-      - "application/xml"
+      - Financials
+      summary: Travel spending grouped by date periods (weekly or monthly)
       parameters:
-      - name: "orderId"
-        in: "path"
-        description: "ID of pet that needs to be fetched"
-        required: true
-        type: "integer"
-        maximum: 10
-        minimum: 1
-        format: "int64"
-      responses:
-        200:
-          description: "successful operation"
-          schema:
-            $ref: "#/definitions/Order"
-        400:
-          description: "Invalid ID supplied"
-        404:
-          description: "Order not found"
-    delete:
-      tags:
-      - "store"
-      summary: "Delete purchase order by ID"
-      description: "For valid response try integer IDs with positive integer value.\
-        \ Negative or non-integer values will generate API errors"
-      operationId: "deleteOrder"
-      produces:
-      - "application/json"
-      - "application/xml"
-      parameters:
-      - name: "orderId"
-        in: "path"
-        description: "ID of the order that needs to be deleted"
-        required: true
-        type: "integer"
-        minimum: 1
-        format: "int64"
-      responses:
-        400:
-          description: "Invalid ID supplied"
-        404:
-          description: "Order not found"
-  /store/inventory:
-    get:
-      tags:
-      - "store"
-      summary: "Returns pet inventories by status"
-      description: "Returns a map of status codes to quantities"
-      operationId: "getInventory"
-      produces:
-      - "application/json"
-      parameters: []
-      responses:
-        200:
-          description: "successful operation"
-          schema:
-            type: "object"
-            additionalProperties:
-              type: "integer"
-              format: "int32"
-      security:
-      - api_key: []
-  /user/createWithArray:
-    post:
-      tags:
-      - "user"
-      summary: "Creates list of users with given input array"
-      description: ""
-      operationId: "createUsersWithArrayInput"
-      consumes:
-      - "application/json"
-      produces:
-      - "application/json"
-      - "application/xml"
-      parameters:
-      - in: "body"
-        name: "body"
-        description: "List of user object"
+      - name: start_date
+        in: query
         required: true
         schema:
-          type: "array"
-          items:
-            $ref: "#/definitions/User"
-      responses:
-        default:
-          description: "successful operation"
-  /user/createWithList:
-    post:
-      tags:
-      - "user"
-      summary: "Creates list of users with given input array"
-      description: ""
-      operationId: "createUsersWithListInput"
-      consumes:
-      - "application/json"
-      produces:
-      - "application/json"
-      - "application/xml"
-      parameters:
-      - in: "body"
-        name: "body"
-        description: "List of user object"
+          type: string
+          format: date
+        description: The start date for the summary report (YYYY-MM-DD).
+        example: 2024-01-01
+      - name: end_date
+        in: query
         required: true
         schema:
-          type: "array"
-          items:
-            $ref: "#/definitions/User"
-      responses:
-        default:
-          description: "successful operation"
-  /user/{username}:
-    get:
-      tags:
-      - "user"
-      summary: "Get user by user name"
-      description: ""
-      operationId: "getUserByName"
-      produces:
-      - "application/json"
-      - "application/xml"
-      parameters:
-      - name: "username"
-        in: "path"
-        description: "The name that needs to be fetched. Use user1 for testing. "
-        required: true
-        type: "string"
-      responses:
-        200:
-          description: "successful operation"
-          schema:
-            $ref: "#/definitions/User"
-        400:
-          description: "Invalid username supplied"
-        404:
-          description: "User not found"
-    put:
-      tags:
-      - "user"
-      summary: "Updated user"
-      description: "This can only be done by the logged in user."
-      operationId: "updateUser"
-      consumes:
-      - "application/json"
-      produces:
-      - "application/json"
-      - "application/xml"
-      parameters:
-      - name: "username"
-        in: "path"
-        description: "name that need to be updated"
-        required: true
-        type: "string"
-      - in: "body"
-        name: "body"
-        description: "Updated user object"
+          type: string
+          format: date
+        description: The end date for the summary report (YYYY-MM-DD).
+        example: 2024-12-31
+      - name: report_type
+        in: query
         required: true
         schema:
-          $ref: "#/definitions/User"
-      responses:
-        400:
-          description: "Invalid user supplied"
-        404:
-          description: "User not found"
-    delete:
-      tags:
-      - "user"
-      summary: "Delete user"
-      description: "This can only be done by the logged in user."
-      operationId: "deleteUser"
-      produces:
-      - "application/json"
-      - "application/xml"
-      parameters:
-      - name: "username"
-        in: "path"
-        description: "The name that needs to be deleted"
-        required: true
-        type: "string"
-      responses:
-        400:
-          description: "Invalid username supplied"
-        404:
-          description: "User not found"
-  /user/login:
-    get:
-      tags:
-      - "user"
-      summary: "Logs user into the system"
-      description: ""
-      operationId: "loginUser"
-      produces:
-      - "application/json"
-      - "application/xml"
-      parameters:
-      - name: "username"
-        in: "query"
-        description: "The user name for login"
-        required: true
-        type: "string"
-      - name: "password"
-        in: "query"
-        description: "The password for login in clear text"
-        required: true
-        type: "string"
-      responses:
-        200:
-          description: "successful operation"
-          headers:
-            X-Expires-After:
-              type: "string"
-              format: "date-time"
-              description: "date in UTC when token expires"
-            X-Rate-Limit:
-              type: "integer"
-              format: "int32"
-              description: "calls per hour allowed by the user"
-          schema:
-            type: "string"
-        400:
-          description: "Invalid username/password supplied"
-  /user/logout:
-    get:
-      tags:
-      - "user"
-      summary: "Logs out current logged in user session"
-      description: ""
-      operationId: "logoutUser"
-      produces:
-      - "application/json"
-      - "application/xml"
-      parameters: []
-      responses:
-        default:
-          description: "successful operation"
-  /user:
-    post:
-      tags:
-      - "user"
-      summary: "Create user"
-      description: "This can only be done by the logged in user."
-      operationId: "createUser"
-      consumes:
-      - "application/json"
-      produces:
-      - "application/json"
-      - "application/xml"
-      parameters:
-      - in: "body"
-        name: "body"
-        description: "Created user object"
+          type: string
+          enum:
+          - lodging
+          - flights
+          - car_rentals
+          - all_trips
+        description: "The type of report to generate (lodging, flights, car_rentals, all_trips)."
+        example: lodging
+      - name: filter_type
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - member
+          - department
+          - travel_policy
+          - custom_field
+        description: "The type of filter to apply (member, department, travel_policy, custom_field)."
+        example: custom_field
+      - name: filter_resource_id
+        in: query
+        required: false
+        schema:
+          type: integer
+        description: Required if a filter_type is given. The id corresponds to the type of the resource being filtered.
+        example: 123
+      - name: filter_value
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Required if a filter_type is custom_field. Identifies the value within the resource. Only applies to the custom_field filter.
+        example: SUMMIT 2024
+      - name: include_cancelled
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: false
+        description: Include bookings that were cancelled.
+        example: "true"
+      - name: include_cancelled
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: false
+        description: Add taxes and fees to spending and ADR.
+        example: "true"
+      - name: group_by
+        in: query
         required: true
         schema:
-          $ref: "#/definitions/User"
+          type: string
+          enum:
+          - week
+          - month
+        description: The type of grouping for historical data (by week or month).
+        example: week
       responses:
-        default:
-          description: "successful operation"
-securityDefinitions:
-  api_key:
-    type: "apiKey"
-    name: "api_key"
-    in: "header"
-  petstore_auth:
-    type: "oauth2"
-    authorizationUrl: "https://petstore.swagger.io/oauth/authorize"
-    flow: "implicit"
-    scopes:
-      read:pets: "read your pets"
-      write:pets: "modify pets in your account"
-definitions:
-  ApiResponse:
-    type: "object"
-    properties:
-      code:
-        type: "integer"
-        format: "int32"
-      type:
-        type: "string"
-      message:
-        type: "string"
-  Category:
-    type: "object"
-    properties:
-      id:
-        type: "integer"
-        format: "int64"
-      name:
-        type: "string"
-    xml:
-      name: "Category"
-  Pet:
-    type: "object"
-    required:
-    - "name"
-    - "photoUrls"
-    properties:
-      id:
-        type: "integer"
-        format: "int64"
-      category:
-        $ref: "#/definitions/Category"
-      name:
-        type: "string"
-        example: "doggie"
-      photoUrls:
-        type: "array"
-        xml:
-          wrapped: true
-        items:
-          type: "string"
-          xml:
-            name: "photoUrl"
+        "200":
+          description: "Travel spending grouped by date, with additional metrics."
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  bookings:
+                    description: Number of bookings for each date period.
+                    type: array
+                    example:
+                    - 12
+                    - 10
+                    - 9
+                    - 15
+                    items:
+                      type: number
+                  total_spend:
+                    description: Total spend on bookings for each date period.
+                    type: array
+                    example:
+                    - "1200.0"
+                    - "100.5"
+                    - "930.3"
+                    - "1599.18"
+                    items:
+                      type: string
+                      format: decimal
+                  lodging_spend:
+                    description: Lodging spend on bookings for each date period. NOT IN V1.1.
+                    type: array
+                    example:
+                    - "400.00"
+                    - "100.50"
+                    - "130.30"
+                    - "0.0"
+                    items:
+                      type: string
+                      format: decimal
+                  flights_spend:
+                    description: Lodging spend on bookings for each date period.  NOT IN V1.1.
+                    type: array
+                    example:
+                    - "400.00"
+                    - "0.0"
+                    - "400.0"
+                    - "1599.18"
+                    items:
+                      type: string
+                      format: decimal
+                  car_rentals_spend:
+                    description: Car rentals spend on bookings for each date period.  NOT IN V1.1.
+                    type: array
+                    example:
+                    - "400.00"
+                    - "0.0"
+                    - "400.0"
+                    - "0.0"
+                    items:
+                      type: string
+                      format: decimal
+                  dates:
+                    description: Each date period.
+                    type: array
+                    example:
+                    - 2024-12-01
+                    - 2024-12-08
+                    - 2024-12-15
+                    - 2024-12-22
+                    items:
+                      type: string
+                      format: date
+                  variation:
+                    description: Variation in percentage to the last period in total spending.
+                    type: string
+                    format: decimal
+                    example: "12.4"
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden - not an admin
+        "422":
+          description: Unprocessable Entity - bad parameters
+        "500":
+          description: Internal server error
+  /financials/savings_by_date:
+    get:
       tags:
-        type: "array"
-        xml:
-          wrapped: true
-        items:
-          xml:
-            name: "tag"
-          $ref: "#/definitions/Tag"
-      status:
-        type: "string"
-        description: "pet status in the store"
+      - Financials
+      summary: Travel savings grouped by date periods (weekly or monthly)
+      parameters:
+      - name: start_date
+        in: query
+        required: true
+        schema:
+          type: string
+          format: date
+        description: The start date for the summary report (YYYY-MM-DD).
+        example: 2024-01-01
+      - name: end_date
+        in: query
+        required: true
+        schema:
+          type: string
+          format: date
+        description: The end date for the summary report (YYYY-MM-DD).
+        example: 2024-12-31
+      - name: report_type
+        in: query
+        required: true
+        schema:
+          type: string
+          enum:
+          - lodging
+          - flights
+          - car_rentals
+          - all_trips
+        description: "The type of report to generate (lodging, flights, car_rentals, all_trips)."
+        example: lodging
+      - name: filter_type
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - member
+          - department
+          - travel_policy
+          - custom_field
+        description: "The type of filter to apply (member, department, travel_policy, custom_field)."
+        example: custom_field
+      - name: filter_resource_id
+        in: query
+        required: false
+        schema:
+          type: integer
+        description: Required if a filter_type is given. The id corresponds to the type of the resource being filtered.
+        example: 123
+      - name: filter_value
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Required if a filter_type is custom_field. Identifies the value within the resource. Only applies to the custom_field filter.
+        example: SUMMIT 2024
+      - name: include_cancelled
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: false
+        description: Include bookings that were cancelled.
+        example: "true"
+      - name: include_cancelled
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: false
+        description: Add taxes and fees to spending and ADR.
+        example: "true"
+      - name: group_by
+        in: query
+        required: true
+        schema:
+          type: string
+          enum:
+          - week
+          - month
+        description: The type of grouping for historical data (by week or month).
+        example: week
+      responses:
+        "200":
+          description: Savings against spending grouped by date periods (weekly or monthly)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  original_cost:
+                    description: Retail cost of bookings for each date period.
+                    type: array
+                    example:
+                    - "1500.0"
+                    - "200.0"
+                    - "1200.5"
+                    - "1999.99"
+                    items:
+                      type: string
+                      format: decimal
+                  total_spend:
+                    description: Total spend on bookings with savings for each date period.
+                    type: array
+                    example:
+                    - "1200.0"
+                    - "100.5"
+                    - "930.3"
+                    - "1599.18"
+                    items:
+                      type: string
+                      format: decimal
+                  dates:
+                    description: Each date period.
+                    type: array
+                    example:
+                    - 2024-12-01
+                    - 2024-12-08
+                    - 2024-12-15
+                    - 2024-12-22
+                    items:
+                      type: string
+                      format: date
+                  variation:
+                    description: Variation in percentage related to the last period.
+                    type: string
+                    format: decimal
+                    example: "12.4"
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden - not an admin
+        "422":
+          description: Unprocessable Entity - bad parameters
+        "500":
+          description: Internal server error
+  /financials/spend_per_booking_summary:
+    get:
+      tags:
+      - Financials
+      summary: Spend per booking summary NOT IN V1.1.
+      parameters:
+      - name: start_date
+        in: query
+        required: true
+        schema:
+          type: string
+          format: date
+        description: The start date for the summary report (YYYY-MM-DD).
+        example: 2024-01-01
+      - name: end_date
+        in: query
+        required: true
+        schema:
+          type: string
+          format: date
+        description: The end date for the summary report (YYYY-MM-DD).
+        example: 2024-12-31
+      - name: report_type
+        in: query
+        required: true
+        schema:
+          type: string
+          enum:
+          - lodging
+          - flights
+          - car_rentals
+          - all_trips
+        description: "The type of report to generate (lodging, flights, car_rentals, all_trips)."
+        example: lodging
+      - name: filter_type
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - member
+          - department
+          - travel_policy
+          - custom_field
+        description: "The type of filter to apply (member, department, travel_policy, custom_field)."
+        example: custom_field
+      - name: filter_resource_id
+        in: query
+        required: false
+        schema:
+          type: integer
+        description: Required if a filter_type is given. The id corresponds to the type of the resource being filtered.
+        example: 123
+      - name: filter_value
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Required if a filter_type is custom_field. Identifies the value within the resource. Only applies to the custom_field filter.
+        example: SUMMIT 2024
+      - name: include_cancelled
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: false
+        description: Include bookings that were cancelled.
+        example: "true"
+      - name: include_cancelled
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: false
+        description: Add taxes and fees to spending and ADR.
+        example: "true"
+      responses:
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden - not an admin
+        "422":
+          description: Unprocessable Entity - bad parameters
+        "500":
+          description: Internal server error
+  /financials/bookings_breakdown:
+    get:
+      tags:
+      - Financials
+      summary: Bookings with detailed information
+      parameters:
+      - name: start_date
+        in: query
+        required: true
+        schema:
+          type: string
+          format: date
+        description: The start date for the summary report (YYYY-MM-DD).
+        example: 2024-01-01
+      - name: end_date
+        in: query
+        required: true
+        schema:
+          type: string
+          format: date
+        description: The end date for the summary report (YYYY-MM-DD).
+        example: 2024-12-31
+      - name: report_type
+        in: query
+        required: true
+        schema:
+          type: string
+          enum:
+          - lodging
+          - flights
+          - car_rentals
+          - all_trips
+        description: "The type of report to generate (lodging, flights, car_rentals, all_trips)."
+        example: lodging
+      - name: filter_type
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - member
+          - department
+          - travel_policy
+          - custom_field
+        description: "The type of filter to apply (member, department, travel_policy, custom_field)."
+        example: custom_field
+      - name: filter_resource_id
+        in: query
+        required: false
+        schema:
+          type: integer
+        description: Required if a filter_type is given. The id corresponds to the type of the resource being filtered.
+        example: 123
+      - name: filter_value
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Required if a filter_type is custom_field. Identifies the value within the resource. Only applies to the custom_field filter.
+        example: SUMMIT 2024
+      - name: include_cancelled
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: false
+        description: Include bookings that were cancelled.
+        example: "true"
+      - name: include_cancelled
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: false
+        description: Add taxes and fees to spending and ADR.
+        example: "true"
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: number
+          default: 10
+        description: The maximum number of results.
+        example: 20
+      - name: offset
+        in: query
+        required: false
+        schema:
+          type: number
+          default: 0
+        description: The offset between the initial data and the current result.
+        example: 40
+      - name: sort
+        in: query
+        required: false
+        schema:
+          type: string
+        description: The column used for sorting.
+        example: spending
+      - name: direction
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - asc
+          - desc
+          default: asc
+        description: The direction of the sorting.
+        example: asc
+      responses:
+        "200":
+          description: List of bookings with details.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        booking_number:
+                          type: string
+                          example: G-2123123
+                        booking_type:
+                          type: string
+                          enum:
+                          - lodging
+                          - flight
+                          - car_rental
+                          example: lodging
+                        travelers:
+                          type: array
+                          items:
+                            type: string
+                          example:
+                          - Jane Doe
+                          - John Doe
+                        departments:
+                          type: string
+                          example: Operations
+                        spending:
+                          type: string
+                          format: decimal
+                          example: "1300.5"
+                        savings:
+                          type: string
+                          format: decimal
+                          example: "122.32"
+                        vendor:
+                          type: string
+                          example: Holiday Inn
+                        date_booked:
+                          type: string
+                          format: date
+                          example: 2024-01-31
+                  meta:
+                    type: object
+                    properties:
+                      limit:
+                        type: number
+                        example: 10
+                      offset:
+                        type: number
+                        example: 0
+                      total:
+                        type: number
+                        example: 35
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden - not an admin
+        "422":
+          description: Unprocessable Entity - bad parameters
+        "500":
+          description: Internal server error
+  /bookers/top_bookers_by_quantity:
+    get:
+      tags:
+      - Bookers
+      summary: Top bookers by quantity with variation
+      parameters:
+      - name: start_date
+        in: query
+        required: true
+        schema:
+          type: string
+          format: date
+        description: The start date for the summary report (YYYY-MM-DD).
+        example: 2024-01-01
+      - name: end_date
+        in: query
+        required: true
+        schema:
+          type: string
+          format: date
+        description: The end date for the summary report (YYYY-MM-DD).
+        example: 2024-12-31
+      - name: report_type
+        in: query
+        required: true
+        schema:
+          type: string
+          enum:
+          - lodging
+          - flights
+          - car_rentals
+          - all_trips
+        description: "The type of report to generate (lodging, flights, car_rentals, all_trips)."
+        example: lodging
+      - name: filter_type
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - member
+          - department
+          - travel_policy
+          - custom_field
+        description: "The type of filter to apply (member, department, travel_policy, custom_field)."
+        example: custom_field
+      - name: filter_resource_id
+        in: query
+        required: false
+        schema:
+          type: integer
+        description: Required if a filter_type is given. The id corresponds to the type of the resource being filtered.
+        example: 123
+      - name: filter_value
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Required if a filter_type is custom_field. Identifies the value within the resource. Only applies to the custom_field filter.
+        example: SUMMIT 2024
+      - name: include_cancelled
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: false
+        description: Include bookings that were cancelled.
+        example: "true"
+      - name: include_cancelled
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: false
+        description: Add taxes and fees to spending and ADR.
+        example: "true"
+      responses:
+        "200":
+          description: "List of top 4 bookers by quantity with quantity and variation, and overall metrics of quantity."
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  top_bookers:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        full_name:
+                          type: string
+                          description: Full name of the booker
+                          example: Ame Yamerson
+                        bookings:
+                          type: number
+                          description: Number of bookings
+                          example: 63
+                        variation:
+                          type: string
+                          format: decimal
+                          description: Variation when compared to the last period (null if not appliable)
+                          example: "12.4"
+                  total_bookings:
+                    type: number
+                    description: Total number of bookings in the period
+                    example: 126
+                  total_bookers:
+                    type: number
+                    description: Total number of distinct bookers in the period
+                    example: 4
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden - not an admin
+        "422":
+          description: Unprocessable Entity - bad parameters
+        "500":
+          description: Internal server error
+  /bookers/top_bookers_by_total_spend:
+    get:
+      tags:
+      - Bookers
+      summary: Top bookers by total spend
+      parameters:
+      - name: start_date
+        in: query
+        required: true
+        schema:
+          type: string
+          format: date
+        description: The start date for the summary report (YYYY-MM-DD).
+        example: 2024-01-01
+      - name: end_date
+        in: query
+        required: true
+        schema:
+          type: string
+          format: date
+        description: The end date for the summary report (YYYY-MM-DD).
+        example: 2024-12-31
+      - name: report_type
+        in: query
+        required: true
+        schema:
+          type: string
+          enum:
+          - lodging
+          - flights
+          - car_rentals
+          - all_trips
+        description: "The type of report to generate (lodging, flights, car_rentals, all_trips)."
+        example: lodging
+      - name: filter_type
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - member
+          - department
+          - travel_policy
+          - custom_field
+        description: "The type of filter to apply (member, department, travel_policy, custom_field)."
+        example: custom_field
+      - name: filter_resource_id
+        in: query
+        required: false
+        schema:
+          type: integer
+        description: Required if a filter_type is given. The id corresponds to the type of the resource being filtered.
+        example: 123
+      - name: filter_value
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Required if a filter_type is custom_field. Identifies the value within the resource. Only applies to the custom_field filter.
+        example: SUMMIT 2024
+      - name: include_cancelled
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: false
+        description: Include bookings that were cancelled.
+        example: "true"
+      - name: include_cancelled
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: false
+        description: Add taxes and fees to spending and ADR.
+        example: "true"
+      responses:
+        "200":
+          description: "List of top 4 bookers by spending with quantity and spending, and overall average spending."
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  top_bookers:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        full_name:
+                          type: string
+                          description: Full name of the booker
+                          example: Ame Yamerson
+                        bookings:
+                          type: number
+                          description: Number of bookings
+                          example: 63
+                        spending:
+                          type: string
+                          format: decimal
+                          description: Total spending
+                          example: "9865.44"
+                  average_spending_per_booker:
+                    type: string
+                    format: decimal
+                    description: Total spending divided by the number of bookers
+                    example: "823.68"
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden - not an admin
+        "422":
+          description: Unprocessable Entity - bad parameters
+        "500":
+          description: Internal server error
+  /bookers/top_bookers_by_adr:
+    get:
+      tags:
+      - Bookers
+      summary: Top bookers by ADR - average daily rate
+      parameters:
+      - name: start_date
+        in: query
+        required: true
+        schema:
+          type: string
+          format: date
+        description: The start date for the summary report (YYYY-MM-DD).
+        example: 2024-01-01
+      - name: end_date
+        in: query
+        required: true
+        schema:
+          type: string
+          format: date
+        description: The end date for the summary report (YYYY-MM-DD).
+        example: 2024-12-31
+      - name: report_type
+        in: query
+        required: true
+        schema:
+          type: string
+          enum:
+          - lodging
+          - flights
+          - car_rentals
+          - all_trips
+        description: "The type of report to generate (lodging, flights, car_rentals, all_trips)."
+        example: lodging
+      - name: filter_type
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - member
+          - department
+          - travel_policy
+          - custom_field
+        description: "The type of filter to apply (member, department, travel_policy, custom_field)."
+        example: custom_field
+      - name: filter_resource_id
+        in: query
+        required: false
+        schema:
+          type: integer
+        description: Required if a filter_type is given. The id corresponds to the type of the resource being filtered.
+        example: 123
+      - name: filter_value
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Required if a filter_type is custom_field. Identifies the value within the resource. Only applies to the custom_field filter.
+        example: SUMMIT 2024
+      responses:
+        "200":
+          description: "List of top 4 bookers by ADR (average daily rate) with the ADR, and overall ADR."
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  top_bookers:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        full_name:
+                          type: string
+                          description: Full name of the booker
+                          example: Game Kamerson
+                        adr:
+                          type: string
+                          format: decimal
+                          description: Average daily rate
+                          example: "417.58"
+                  adr_per_booker:
+                    type: string
+                    format: decimal
+                    description: Total ADR divided by the number of bookers
+                    example: "142.21"
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden - not an admin
+        "422":
+          description: Unprocessable Entity - bad parameters
+        "500":
+          description: Internal server error
+  /bookers/bookers_breakdown:
+    get:
+      tags:
+      - Bookers
+      summary: Bookers with detailed information
+      parameters:
+      - name: start_date
+        in: query
+        required: true
+        schema:
+          type: string
+          format: date
+        description: The start date for the summary report (YYYY-MM-DD).
+        example: 2024-01-01
+      - name: end_date
+        in: query
+        required: true
+        schema:
+          type: string
+          format: date
+        description: The end date for the summary report (YYYY-MM-DD).
+        example: 2024-12-31
+      - name: report_type
+        in: query
+        required: true
+        schema:
+          type: string
+          enum:
+          - lodging
+          - flights
+          - car_rentals
+          - all_trips
+        description: "The type of report to generate (lodging, flights, car_rentals, all_trips)."
+        example: lodging
+      - name: filter_type
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - member
+          - department
+          - travel_policy
+          - custom_field
+        description: "The type of filter to apply (member, department, travel_policy, custom_field)."
+        example: custom_field
+      - name: filter_resource_id
+        in: query
+        required: false
+        schema:
+          type: integer
+        description: Required if a filter_type is given. The id corresponds to the type of the resource being filtered.
+        example: 123
+      - name: filter_value
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Required if a filter_type is custom_field. Identifies the value within the resource. Only applies to the custom_field filter.
+        example: SUMMIT 2024
+      - name: include_cancelled
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: false
+        description: Include bookings that were cancelled.
+        example: "true"
+      - name: include_cancelled
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: false
+        description: Add taxes and fees to spending and ADR.
+        example: "true"
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: number
+          default: 10
+        description: The maximum number of results.
+        example: 20
+      - name: offset
+        in: query
+        required: false
+        schema:
+          type: number
+          default: 0
+        description: The offset between the initial data and the current result.
+        example: 40
+      - name: sort
+        in: query
+        required: false
+        schema:
+          type: string
+        description: The column used for sorting.
+        example: spending
+      - name: direction
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - asc
+          - desc
+          default: asc
+        description: The direction of the sorting.
+        example: asc
+      - name: format
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - json
+          - csv
+          default: json
+        description: The format of the response.
+        example: json
+      responses:
+        "200":
+          description: List of bookings with details.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        booker:
+                          type: string
+                          example: Anna Banana
+                        role:
+                          type: string
+                          enum:
+                          - Administrator
+                          - Coordinator
+                          - Traveler
+                          example: Administrator
+                        department:
+                          type: string
+                          example: Operations
+                        spending:
+                          type: string
+                          format: decimal
+                          example: "19756.18"
+                        savings:
+                          type: string
+                          format: decimal
+                          example: "3747.75"
+                        adr:
+                          type: string
+                          format: decimal
+                          example: "101.73"
+                        bookings:
+                          type: number
+                          example: 28
+                        booking_for:
+                          type: number
+                          description: Note - need more details
+                          example: 4
+                  meta:
+                    type: object
+                    properties:
+                      limit:
+                        type: number
+                        example: 10
+                      offset:
+                        type: number
+                        example: 0
+                      total:
+                        type: number
+                        example: 35
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden - not an admin
+        "422":
+          description: Unprocessable Entity - bad parameters
+        "500":
+          description: Internal server error
+  /travelers/all_members_traveling:
+    get:
+      tags:
+      - Travelers
+      summary: List the top travelers with the most number of bookings
+      parameters:
+      - name: start_date
+        in: query
+        required: true
+        schema:
+          type: string
+          format: date
+        description: The start date for the summary report (YYYY-MM-DD).
+        example: 2024-01-01
+      - name: end_date
+        in: query
+        required: true
+        schema:
+          type: string
+          format: date
+        description: The end date for the summary report (YYYY-MM-DD).
+        example: 2024-12-31
+      - name: report_type
+        in: query
+        required: true
+        schema:
+          type: string
+          enum:
+          - lodging
+          - flights
+          - car_rentals
+          - all_trips
+        description: "The type of report to generate (lodging, flights, car_rentals, all_trips)."
+        example: lodging
+      - name: filter_type
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - member
+          - department
+          - travel_policy
+          - custom_field
+        description: "The type of filter to apply (member, department, travel_policy, custom_field)."
+        example: custom_field
+      - name: filter_resource_id
+        in: query
+        required: false
+        schema:
+          type: integer
+        description: Required if a filter_type is given. The id corresponds to the type of the resource being filtered.
+        example: 123
+      - name: filter_value
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Required if a filter_type is custom_field. Identifies the value within the resource. Only applies to the custom_field filter.
+        example: SUMMIT 2024
+      - name: include_cancelled
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: false
+        description: Include bookings that were cancelled.
+        example: "true"
+      - name: include_cancelled
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: false
+        description: Add taxes and fees to spending and ADR.
+        example: "true"
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: number
+          default: 50
+        description: The maximum number of results.
+        example: 20
+      responses:
+        "200":
+          description: List of members traveling on the time period (note - verify if we still want to use booking date)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  travelers:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        full_name:
+                          type: string
+                          example: Ame Yamerson
+                  total_travelers:
+                    type: number
+                    example: 41
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden - not an admin
+        "422":
+          description: Unprocessable Entity - bad parameters
+        "500":
+          description: Internal server error
+  /travelers/top_travelers_by_total_spend:
+    get:
+      tags:
+      - Travelers
+      summary: Top travelers by total spend
+      parameters:
+      - name: start_date
+        in: query
+        required: true
+        schema:
+          type: string
+          format: date
+        description: The start date for the summary report (YYYY-MM-DD).
+        example: 2024-01-01
+      - name: end_date
+        in: query
+        required: true
+        schema:
+          type: string
+          format: date
+        description: The end date for the summary report (YYYY-MM-DD).
+        example: 2024-12-31
+      - name: report_type
+        in: query
+        required: true
+        schema:
+          type: string
+          enum:
+          - lodging
+          - flights
+          - car_rentals
+          - all_trips
+        description: "The type of report to generate (lodging, flights, car_rentals, all_trips)."
+        example: lodging
+      - name: filter_type
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - member
+          - department
+          - travel_policy
+          - custom_field
+        description: "The type of filter to apply (member, department, travel_policy, custom_field)."
+        example: custom_field
+      - name: filter_resource_id
+        in: query
+        required: false
+        schema:
+          type: integer
+        description: Required if a filter_type is given. The id corresponds to the type of the resource being filtered.
+        example: 123
+      - name: filter_value
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Required if a filter_type is custom_field. Identifies the value within the resource. Only applies to the custom_field filter.
+        example: SUMMIT 2024
+      - name: include_cancelled
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: false
+        description: Include bookings that were cancelled.
+        example: "true"
+      - name: include_cancelled
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: false
+        description: Add taxes and fees to spending and ADR.
+        example: "true"
+      responses:
+        "200":
+          description: "List of top 10 travelers by spending with quantity and spending, and overall average spending."
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  top_travelers:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        full_name:
+                          type: string
+                          description: Full name of the traveler
+                          example: Ame Yamerson
+                        bookings:
+                          type: number
+                          description: Number of bookings
+                          example: 12
+                        spending:
+                          type: string
+                          format: decimal
+                          description: Total spending
+                          example: "4234.12"
+                  others:
+                    type: object
+                    properties:
+                      quantity_of_others:
+                        type: number
+                        example: 31
+                      bookings:
+                        type: number
+                        example: 78
+                      spending:
+                        type: string
+                        format: decimal
+                        example: "9627.05"
+                  average_spending_per_traveler:
+                    type: string
+                    format: decimal
+                    description: Total spending divided by the number of travelers
+                    example: "823.68"
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden - not an admin
+        "422":
+          description: Unprocessable Entity - bad parameters
+        "500":
+          description: Internal server error
+  /travelers/top_travelers_by_adr:
+    get:
+      tags:
+      - Travelers
+      summary: Top travelers by average daily rate
+      parameters:
+      - name: start_date
+        in: query
+        required: true
+        schema:
+          type: string
+          format: date
+        description: The start date for the summary report (YYYY-MM-DD).
+        example: 2024-01-01
+      - name: end_date
+        in: query
+        required: true
+        schema:
+          type: string
+          format: date
+        description: The end date for the summary report (YYYY-MM-DD).
+        example: 2024-12-31
+      - name: report_type
+        in: query
+        required: true
+        schema:
+          type: string
+          enum:
+          - lodging
+          - flights
+          - car_rentals
+          - all_trips
+        description: "The type of report to generate (lodging, flights, car_rentals, all_trips)."
+        example: lodging
+      - name: filter_type
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - member
+          - department
+          - travel_policy
+          - custom_field
+        description: "The type of filter to apply (member, department, travel_policy, custom_field)."
+        example: custom_field
+      - name: filter_resource_id
+        in: query
+        required: false
+        schema:
+          type: integer
+        description: Required if a filter_type is given. The id corresponds to the type of the resource being filtered.
+        example: 123
+      - name: filter_value
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Required if a filter_type is custom_field. Identifies the value within the resource. Only applies to the custom_field filter.
+        example: SUMMIT 2024
+      - name: include_cancelled
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: false
+        description: Include bookings that were cancelled.
+        example: "true"
+      - name: include_cancelled
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: false
+        description: Add taxes and fees to spending and ADR.
+        example: "true"
+      responses:
+        "200":
+          description: "List of top 10 travelers by ADR (average daily rate) with the ADR, and overall ADR."
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  top_travelers:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        full_name:
+                          type: string
+                          description: Full name of the traveler
+                          example: Ame Yamerson
+                        adr:
+                          type: string
+                          format: decimal
+                          description: Average daily rate
+                          example: "352.84"
+                  adr_per_traveler:
+                    type: string
+                    format: decimal
+                    description: Total ADR divided by the number of travelers
+                    example: "142.21"
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden - not an admin
+        "422":
+          description: Unprocessable Entity - bad parameters
+        "500":
+          description: Internal server error
+  /travelers/travelers_breakdown:
+    get:
+      tags:
+      - Travelers
+      summary: Travelers with detailed information
+      parameters:
+      - name: start_date
+        in: query
+        required: true
+        schema:
+          type: string
+          format: date
+        description: The start date for the summary report (YYYY-MM-DD).
+        example: 2024-01-01
+      - name: end_date
+        in: query
+        required: true
+        schema:
+          type: string
+          format: date
+        description: The end date for the summary report (YYYY-MM-DD).
+        example: 2024-12-31
+      - name: report_type
+        in: query
+        required: true
+        schema:
+          type: string
+          enum:
+          - lodging
+          - flights
+          - car_rentals
+          - all_trips
+        description: "The type of report to generate (lodging, flights, car_rentals, all_trips)."
+        example: lodging
+      - name: filter_type
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - member
+          - department
+          - travel_policy
+          - custom_field
+        description: "The type of filter to apply (member, department, travel_policy, custom_field)."
+        example: custom_field
+      - name: filter_resource_id
+        in: query
+        required: false
+        schema:
+          type: integer
+        description: Required if a filter_type is given. The id corresponds to the type of the resource being filtered.
+        example: 123
+      - name: filter_value
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Required if a filter_type is custom_field. Identifies the value within the resource. Only applies to the custom_field filter.
+        example: SUMMIT 2024
+      - name: include_cancelled
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: false
+        description: Include bookings that were cancelled.
+        example: "true"
+      - name: include_cancelled
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: false
+        description: Add taxes and fees to spending and ADR.
+        example: "true"
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: number
+          default: 10
+        description: The maximum number of results.
+        example: 20
+      - name: offset
+        in: query
+        required: false
+        schema:
+          type: number
+          default: 0
+        description: The offset between the initial data and the current result.
+        example: 40
+      - name: sort
+        in: query
+        required: false
+        schema:
+          type: string
+        description: The column used for sorting.
+        example: spending
+      - name: direction
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - asc
+          - desc
+          default: asc
+        description: The direction of the sorting.
+        example: asc
+      - name: format
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - json
+          - csv
+          default: json
+        description: The format of the response.
+        example: json
+      responses:
+        "200":
+          description: List of travelers with details.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        traveler:
+                          type: string
+                          example: Anna Banana
+                        department:
+                          type: string
+                          example: Operations
+                        travel_policy:
+                          type: string
+                          example: C-Level
+                        spending:
+                          type: string
+                          format: decimal
+                          example: "19756.18"
+                        savings:
+                          type: string
+                          format: decimal
+                          example: "3747.75"
+                        adr:
+                          type: string
+                          format: decimal
+                          example: "101.73"
+                        bookings:
+                          type: number
+                          example: 28
+                  meta:
+                    type: object
+                    properties:
+                      limit:
+                        type: number
+                        example: 10
+                      offset:
+                        type: number
+                        example: 0
+                      total:
+                        type: number
+                        example: 35
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden - not an admin
+        "422":
+          description: Unprocessable Entity - bad parameters
+        "500":
+          description: Internal server error
+  /departments/top_departments_by_quantity:
+    get:
+      tags:
+      - Departments
+      summary: Top departments by quantity with variation
+      parameters:
+      - name: start_date
+        in: query
+        required: true
+        schema:
+          type: string
+          format: date
+        description: The start date for the summary report (YYYY-MM-DD).
+        example: 2024-01-01
+      - name: end_date
+        in: query
+        required: true
+        schema:
+          type: string
+          format: date
+        description: The end date for the summary report (YYYY-MM-DD).
+        example: 2024-12-31
+      - name: report_type
+        in: query
+        required: true
+        schema:
+          type: string
+          enum:
+          - lodging
+          - flights
+          - car_rentals
+          - all_trips
+        description: "The type of report to generate (lodging, flights, car_rentals, all_trips)."
+        example: lodging
+      - name: filter_type
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - member
+          - department
+          - travel_policy
+          - custom_field
+        description: "The type of filter to apply (member, department, travel_policy, custom_field)."
+        example: custom_field
+      - name: filter_resource_id
+        in: query
+        required: false
+        schema:
+          type: integer
+        description: Required if a filter_type is given. The id corresponds to the type of the resource being filtered.
+        example: 123
+      - name: filter_value
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Required if a filter_type is custom_field. Identifies the value within the resource. Only applies to the custom_field filter.
+        example: SUMMIT 2024
+      - name: include_cancelled
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: false
+        description: Include bookings that were cancelled.
+        example: "true"
+      - name: include_cancelled
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: false
+        description: Add taxes and fees to spending and ADR.
+        example: "true"
+      responses:
+        "200":
+          description: "List of top 4 departments by quantity with quantity and variation, and overall metrics of quantity."
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  top_departments:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                          description: Department name
+                          example: Operations
+                        bookings:
+                          type: number
+                          description: Number of bookings
+                          example: 63
+                        variation:
+                          type: string
+                          format: decimal
+                          description: Variation when compared to the last period (null if not appliable)
+                          example: "12.4"
+                  total_bookings:
+                    type: number
+                    description: Total number of bookings in the period
+                    example: 126
+                  total_departments:
+                    type: number
+                    description: Total number of distinct departments booking in the period
+                    example: 4
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden - not an admin
+        "422":
+          description: Unprocessable Entity - bad parameters
+        "500":
+          description: Internal server error
+  /departments/top_departments_by_total_spend:
+    get:
+      tags:
+      - Departments
+      summary: Top departments by total spend
+      parameters:
+      - name: start_date
+        in: query
+        required: true
+        schema:
+          type: string
+          format: date
+        description: The start date for the summary report (YYYY-MM-DD).
+        example: 2024-01-01
+      - name: end_date
+        in: query
+        required: true
+        schema:
+          type: string
+          format: date
+        description: The end date for the summary report (YYYY-MM-DD).
+        example: 2024-12-31
+      - name: report_type
+        in: query
+        required: true
+        schema:
+          type: string
+          enum:
+          - lodging
+          - flights
+          - car_rentals
+          - all_trips
+        description: "The type of report to generate (lodging, flights, car_rentals, all_trips)."
+        example: lodging
+      - name: filter_type
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - member
+          - department
+          - travel_policy
+          - custom_field
+        description: "The type of filter to apply (member, department, travel_policy, custom_field)."
+        example: custom_field
+      - name: filter_resource_id
+        in: query
+        required: false
+        schema:
+          type: integer
+        description: Required if a filter_type is given. The id corresponds to the type of the resource being filtered.
+        example: 123
+      - name: filter_value
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Required if a filter_type is custom_field. Identifies the value within the resource. Only applies to the custom_field filter.
+        example: SUMMIT 2024
+      - name: include_cancelled
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: false
+        description: Include bookings that were cancelled.
+        example: "true"
+      - name: include_cancelled
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: false
+        description: Add taxes and fees to spending and ADR.
+        example: "true"
+      responses:
+        "200":
+          description: "List of top 4 departments by spending with quantity and spending, and overall average spending."
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  top_departments:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                          description: Department name
+                          example: Operations
+                        bookings:
+                          type: number
+                          description: Number of bookings
+                          example: 63
+                        spending:
+                          type: string
+                          format: decimal
+                          description: Total spending
+                          example: "9865.44"
+                  average_spending_per_department:
+                    type: string
+                    format: decimal
+                    description: Total spending divided by the number of departments
+                    example: "823.68"
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden - not an admin
+        "422":
+          description: Unprocessable Entity - bad parameters
+        "500":
+          description: Internal server error
+  /departments/top_departments_by_adr:
+    get:
+      tags:
+      - Departments
+      summary: Top departments by average daily rate
+      parameters:
+      - name: start_date
+        in: query
+        required: true
+        schema:
+          type: string
+          format: date
+        description: The start date for the summary report (YYYY-MM-DD).
+        example: 2024-01-01
+      - name: end_date
+        in: query
+        required: true
+        schema:
+          type: string
+          format: date
+        description: The end date for the summary report (YYYY-MM-DD).
+        example: 2024-12-31
+      - name: report_type
+        in: query
+        required: true
+        schema:
+          type: string
+          enum:
+          - lodging
+          - flights
+          - car_rentals
+          - all_trips
+        description: "The type of report to generate (lodging, flights, car_rentals, all_trips)."
+        example: lodging
+      - name: filter_type
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - member
+          - department
+          - travel_policy
+          - custom_field
+        description: "The type of filter to apply (member, department, travel_policy, custom_field)."
+        example: custom_field
+      - name: filter_resource_id
+        in: query
+        required: false
+        schema:
+          type: integer
+        description: Required if a filter_type is given. The id corresponds to the type of the resource being filtered.
+        example: 123
+      - name: filter_value
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Required if a filter_type is custom_field. Identifies the value within the resource. Only applies to the custom_field filter.
+        example: SUMMIT 2024
+      - name: include_cancelled
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: false
+        description: Include bookings that were cancelled.
+        example: "true"
+      - name: include_cancelled
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: false
+        description: Add taxes and fees to spending and ADR.
+        example: "true"
+      responses:
+        "200":
+          description: "List of top 4 departments by ADR (average daily rate) with the ADR, and overall ADR."
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  top_departments:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                          description: Department name
+                          example: Operations
+                        adr:
+                          type: string
+                          format: decimal
+                          description: Average daily rate
+                          example: "417.58"
+                  adr_per_department:
+                    type: string
+                    format: decimal
+                    description: Total ADR divided by the number of departments
+                    example: "142.21"
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden - not an admin
+        "422":
+          description: Unprocessable Entity - bad parameters
+        "500":
+          description: Internal server error
+  /departments/departments_breakdown:
+    get:
+      tags:
+      - Departments
+      summary: Departments with detailed information
+      parameters:
+      - name: start_date
+        in: query
+        required: true
+        schema:
+          type: string
+          format: date
+        description: The start date for the summary report (YYYY-MM-DD).
+        example: 2024-01-01
+      - name: end_date
+        in: query
+        required: true
+        schema:
+          type: string
+          format: date
+        description: The end date for the summary report (YYYY-MM-DD).
+        example: 2024-12-31
+      - name: report_type
+        in: query
+        required: true
+        schema:
+          type: string
+          enum:
+          - lodging
+          - flights
+          - car_rentals
+          - all_trips
+        description: "The type of report to generate (lodging, flights, car_rentals, all_trips)."
+        example: lodging
+      - name: filter_type
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - member
+          - department
+          - travel_policy
+          - custom_field
+        description: "The type of filter to apply (member, department, travel_policy, custom_field)."
+        example: custom_field
+      - name: filter_resource_id
+        in: query
+        required: false
+        schema:
+          type: integer
+        description: Required if a filter_type is given. The id corresponds to the type of the resource being filtered.
+        example: 123
+      - name: filter_value
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Required if a filter_type is custom_field. Identifies the value within the resource. Only applies to the custom_field filter.
+        example: SUMMIT 2024
+      - name: include_cancelled
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: false
+        description: Include bookings that were cancelled.
+        example: "true"
+      - name: include_cancelled
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: false
+        description: Add taxes and fees to spending and ADR.
+        example: "true"
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: number
+          default: 10
+        description: The maximum number of results.
+        example: 20
+      - name: offset
+        in: query
+        required: false
+        schema:
+          type: number
+          default: 0
+        description: The offset between the initial data and the current result.
+        example: 40
+      - name: sort
+        in: query
+        required: false
+        schema:
+          type: string
+        description: The column used for sorting.
+        example: spending
+      - name: direction
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - asc
+          - desc
+          default: asc
+        description: The direction of the sorting.
+        example: asc
+      - name: format
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - json
+          - csv
+          default: json
+        description: The format of the response.
+        example: json
+      responses:
+        "200":
+          description: List of departments with details.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        department:
+                          type: string
+                          example: Operations
+                        spending:
+                          type: string
+                          format: decimal
+                          example: "19756.18"
+                        savings:
+                          type: string
+                          format: decimal
+                          example: "3747.75"
+                        top_booker:
+                          type: string
+                          example: Anna Banana
+                        top_traveler:
+                          type: string
+                          example: Anna Banana
+                        bookings:
+                          type: number
+                          example: 24
+                  meta:
+                    type: object
+                    properties:
+                      limit:
+                        type: number
+                        example: 10
+                      offset:
+                        type: number
+                        example: 0
+                      total:
+                        type: number
+                        example: 35
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden - not an admin
+        "422":
+          description: Unprocessable Entity - bad parameters
+        "500":
+          description: Internal server error
+  /travel_policies/top_lodging_adr:
+    get:
+      tags:
+      - Travel Policies
+      summary: Top travel policy lodging ADR relative to the limit
+      parameters:
+      - name: start_date
+        in: query
+        required: true
+        schema:
+          type: string
+          format: date
+        description: The start date for the summary report (YYYY-MM-DD).
+        example: 2024-01-01
+      - name: end_date
+        in: query
+        required: true
+        schema:
+          type: string
+          format: date
+        description: The end date for the summary report (YYYY-MM-DD).
+        example: 2024-12-31
+      - name: report_type
+        in: query
+        required: true
+        schema:
+          type: string
+          enum:
+          - lodging
+          - flights
+          - car_rentals
+          - all_trips
+        description: "The type of report to generate (lodging, flights, car_rentals, all_trips)."
+        example: lodging
+      - name: filter_type
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - member
+          - department
+          - travel_policy
+          - custom_field
+        description: "The type of filter to apply (member, department, travel_policy, custom_field)."
+        example: custom_field
+      - name: filter_resource_id
+        in: query
+        required: false
+        schema:
+          type: integer
+        description: Required if a filter_type is given. The id corresponds to the type of the resource being filtered.
+        example: 123
+      - name: filter_value
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Required if a filter_type is custom_field. Identifies the value within the resource. Only applies to the custom_field filter.
+        example: SUMMIT 2024
+      - name: include_cancelled
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: false
+        description: Include bookings that were cancelled.
+        example: "true"
+      - name: include_cancelled
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: false
+        description: Add taxes and fees to spending and ADR.
+        example: "true"
+      responses:
+        "200":
+          description: List of top 3 travel policies by number with the ADR and travel policy current limit.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  top_travel_policies:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                          description: Travel policy name
+                          example: Executive
+                        adr:
+                          type: string
+                          format: decimal
+                          description: Average daily rate
+                          example: "232.0"
+                        limit:
+                          type: string
+                          format: decimal
+                          description: Travel policy current limit (null represents no limit)
+                          example: "240.0"
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden - not an admin
+        "422":
+          description: Unprocessable Entity - bad parameters
+        "500":
+          description: Internal server error
+  /travel_policies/top_flight_slice:
+    get:
+      tags:
+      - Travel Policies
+      summary: Top travel policy flight slice cost relative to the limit - NOT IN V1.1
+      parameters:
+      - name: start_date
+        in: query
+        required: true
+        schema:
+          type: string
+          format: date
+        description: The start date for the summary report (YYYY-MM-DD).
+        example: 2024-01-01
+      - name: end_date
+        in: query
+        required: true
+        schema:
+          type: string
+          format: date
+        description: The end date for the summary report (YYYY-MM-DD).
+        example: 2024-12-31
+      - name: report_type
+        in: query
+        required: true
+        schema:
+          type: string
+          enum:
+          - lodging
+          - flights
+          - car_rentals
+          - all_trips
+        description: "The type of report to generate (lodging, flights, car_rentals, all_trips)."
+        example: lodging
+      - name: filter_type
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - member
+          - department
+          - travel_policy
+          - custom_field
+        description: "The type of filter to apply (member, department, travel_policy, custom_field)."
+        example: custom_field
+      - name: filter_resource_id
+        in: query
+        required: false
+        schema:
+          type: integer
+        description: Required if a filter_type is given. The id corresponds to the type of the resource being filtered.
+        example: 123
+      - name: filter_value
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Required if a filter_type is custom_field. Identifies the value within the resource. Only applies to the custom_field filter.
+        example: SUMMIT 2024
+      - name: include_cancelled
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: false
+        description: Include bookings that were cancelled.
+        example: "true"
+      - name: include_cancelled
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: false
+        description: Add taxes and fees to spending and ADR.
+        example: "true"
+      responses:
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden - not an admin
+        "422":
+          description: Unprocessable Entity - bad parameters
+        "500":
+          description: Internal server error
+  /travel_policies/top_car_rental_adr:
+    get:
+      tags:
+      - Travel Policies
+      summary: Top travel policy car rental ADR relative to the limit - NOT IN V1.1
+      parameters:
+      - name: start_date
+        in: query
+        required: true
+        schema:
+          type: string
+          format: date
+        description: The start date for the summary report (YYYY-MM-DD).
+        example: 2024-01-01
+      - name: end_date
+        in: query
+        required: true
+        schema:
+          type: string
+          format: date
+        description: The end date for the summary report (YYYY-MM-DD).
+        example: 2024-12-31
+      - name: report_type
+        in: query
+        required: true
+        schema:
+          type: string
+          enum:
+          - lodging
+          - flights
+          - car_rentals
+          - all_trips
+        description: "The type of report to generate (lodging, flights, car_rentals, all_trips)."
+        example: lodging
+      - name: filter_type
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - member
+          - department
+          - travel_policy
+          - custom_field
+        description: "The type of filter to apply (member, department, travel_policy, custom_field)."
+        example: custom_field
+      - name: filter_resource_id
+        in: query
+        required: false
+        schema:
+          type: integer
+        description: Required if a filter_type is given. The id corresponds to the type of the resource being filtered.
+        example: 123
+      - name: filter_value
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Required if a filter_type is custom_field. Identifies the value within the resource. Only applies to the custom_field filter.
+        example: SUMMIT 2024
+      - name: include_cancelled
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: false
+        description: Include bookings that were cancelled.
+        example: "true"
+      - name: include_cancelled
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: false
+        description: Add taxes and fees to spending and ADR.
+        example: "true"
+      responses:
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden - not an admin
+        "422":
+          description: Unprocessable Entity - bad parameters
+        "500":
+          description: Internal server error
+  /travel_policies/travel_policies_breakdown:
+    get:
+      tags:
+      - Travel Policies
+      summary: Travel Policies with detailed information
+      parameters:
+      - name: start_date
+        in: query
+        required: true
+        schema:
+          type: string
+          format: date
+        description: The start date for the summary report (YYYY-MM-DD).
+        example: 2024-01-01
+      - name: end_date
+        in: query
+        required: true
+        schema:
+          type: string
+          format: date
+        description: The end date for the summary report (YYYY-MM-DD).
+        example: 2024-12-31
+      - name: report_type
+        in: query
+        required: true
+        schema:
+          type: string
+          enum:
+          - lodging
+          - flights
+          - car_rentals
+          - all_trips
+        description: "The type of report to generate (lodging, flights, car_rentals, all_trips)."
+        example: lodging
+      - name: filter_type
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - member
+          - department
+          - travel_policy
+          - custom_field
+        description: "The type of filter to apply (member, department, travel_policy, custom_field)."
+        example: custom_field
+      - name: filter_resource_id
+        in: query
+        required: false
+        schema:
+          type: integer
+        description: Required if a filter_type is given. The id corresponds to the type of the resource being filtered.
+        example: 123
+      - name: filter_value
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Required if a filter_type is custom_field. Identifies the value within the resource. Only applies to the custom_field filter.
+        example: SUMMIT 2024
+      - name: include_cancelled
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: false
+        description: Include bookings that were cancelled.
+        example: "true"
+      - name: include_cancelled
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: false
+        description: Add taxes and fees to spending and ADR.
+        example: "true"
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: number
+          default: 10
+        description: The maximum number of results.
+        example: 20
+      - name: offset
+        in: query
+        required: false
+        schema:
+          type: number
+          default: 0
+        description: The offset between the initial data and the current result.
+        example: 40
+      - name: sort
+        in: query
+        required: false
+        schema:
+          type: string
+        description: The column used for sorting.
+        example: spending
+      - name: direction
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - asc
+          - desc
+          default: asc
+        description: The direction of the sorting.
+        example: asc
+      - name: format
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - json
+          - csv
+          default: json
+        description: The format of the response.
+        example: json
+      responses:
+        "200":
+          description: List of travel policies with details.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        travel_policy:
+                          type: string
+                          example: Executive
+                        spending:
+                          type: string
+                          format: decimal
+                          example: "19756.18"
+                        savings:
+                          type: string
+                          format: decimal
+                          example: "3747.75"
+                        members:
+                          type: number
+                          example: 120
+                        bookings:
+                          type: number
+                          example: 24
+                        top_booker:
+                          type: string
+                          example: Anna Banana
+                        top_traveler:
+                          type: string
+                          example: Anna Banana
+                  meta:
+                    type: object
+                    properties:
+                      limit:
+                        type: number
+                        example: 10
+                      offset:
+                        type: number
+                        example: 0
+                      total:
+                        type: number
+                        example: 35
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden - not an admin
+        "422":
+          description: Unprocessable Entity - bad parameters
+        "500":
+          description: Internal server error
+  /locations/top_locations_by_quantity:
+    get:
+      tags:
+      - Top Locations
+      summary: Top locations by quantity
+      parameters:
+      - name: start_date
+        in: query
+        required: true
+        schema:
+          type: string
+          format: date
+        description: The start date for the summary report (YYYY-MM-DD).
+        example: 2024-01-01
+      - name: end_date
+        in: query
+        required: true
+        schema:
+          type: string
+          format: date
+        description: The end date for the summary report (YYYY-MM-DD).
+        example: 2024-12-31
+      - name: report_type
+        in: query
+        required: true
+        schema:
+          type: string
+          enum:
+          - lodging
+          - flights
+          - car_rentals
+          - all_trips
+        description: "The type of report to generate (lodging, flights, car_rentals, all_trips)."
+        example: lodging
+      - name: filter_type
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - member
+          - department
+          - travel_policy
+          - custom_field
+        description: "The type of filter to apply (member, department, travel_policy, custom_field)."
+        example: custom_field
+      - name: filter_resource_id
+        in: query
+        required: false
+        schema:
+          type: integer
+        description: Required if a filter_type is given. The id corresponds to the type of the resource being filtered.
+        example: 123
+      - name: filter_value
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Required if a filter_type is custom_field. Identifies the value within the resource. Only applies to the custom_field filter.
+        example: SUMMIT 2024
+      - name: include_cancelled
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: false
+        description: Include bookings that were cancelled.
+        example: "true"
+      - name: include_cancelled
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: false
+        description: Add taxes and fees to spending and ADR.
+        example: "true"
+      responses:
+        "200":
+          description: "List of top 4 locations by quantity with number of bookings, latitude, and longitude"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  top_locations:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                          description: Location name
+                          example: "Kansas City, MO"
+                        bookings:
+                          type: number
+                          description: Number of bookings
+                          example: 42
+                        latitude:
+                          type: string
+                          format: decimal
+                          example: "4.121212"
+                        longitude:
+                          type: string
+                          format: decimal
+                          example: "-5.121212"
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden - not an admin
+        "422":
+          description: Unprocessable Entity - bad parameters
+        "500":
+          description: Internal server error
+  /locations/top_locations_by_total_spend:
+    get:
+      tags:
+      - Top Locations
+      summary: Top locations by total spend
+      parameters:
+      - name: start_date
+        in: query
+        required: true
+        schema:
+          type: string
+          format: date
+        description: The start date for the summary report (YYYY-MM-DD).
+        example: 2024-01-01
+      - name: end_date
+        in: query
+        required: true
+        schema:
+          type: string
+          format: date
+        description: The end date for the summary report (YYYY-MM-DD).
+        example: 2024-12-31
+      - name: report_type
+        in: query
+        required: true
+        schema:
+          type: string
+          enum:
+          - lodging
+          - flights
+          - car_rentals
+          - all_trips
+        description: "The type of report to generate (lodging, flights, car_rentals, all_trips)."
+        example: lodging
+      - name: filter_type
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - member
+          - department
+          - travel_policy
+          - custom_field
+        description: "The type of filter to apply (member, department, travel_policy, custom_field)."
+        example: custom_field
+      - name: filter_resource_id
+        in: query
+        required: false
+        schema:
+          type: integer
+        description: Required if a filter_type is given. The id corresponds to the type of the resource being filtered.
+        example: 123
+      - name: filter_value
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Required if a filter_type is custom_field. Identifies the value within the resource. Only applies to the custom_field filter.
+        example: SUMMIT 2024
+      - name: include_cancelled
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: false
+        description: Include bookings that were cancelled.
+        example: "true"
+      - name: include_cancelled
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: false
+        description: Add taxes and fees to spending and ADR.
+        example: "true"
+      responses:
+        "200":
+          description: "List of top 4 locations by spending with quantity and spending, and overall average spending."
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  top_locations:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                          description: Location name
+                          example: "Kansas City, MO"
+                        bookings:
+                          type: number
+                          description: Number of bookings
+                          example: 42
+                        spending:
+                          type: string
+                          format: decimal
+                          description: Total spending
+                          example: "9865.44"
+                  average_spending_per_location:
+                    type: string
+                    format: decimal
+                    description: Total spending divided by the number of locations
+                    example: "823.68"
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden - not an admin
+        "422":
+          description: Unprocessable Entity - bad parameters
+        "500":
+          description: Internal server error
+  /locations/top_locations_by_adr:
+    get:
+      tags:
+      - Top Locations
+      summary: Top locations by average daily rate
+      parameters:
+      - name: start_date
+        in: query
+        required: true
+        schema:
+          type: string
+          format: date
+        description: The start date for the summary report (YYYY-MM-DD).
+        example: 2024-01-01
+      - name: end_date
+        in: query
+        required: true
+        schema:
+          type: string
+          format: date
+        description: The end date for the summary report (YYYY-MM-DD).
+        example: 2024-12-31
+      - name: report_type
+        in: query
+        required: true
+        schema:
+          type: string
+          enum:
+          - lodging
+          - flights
+          - car_rentals
+          - all_trips
+        description: "The type of report to generate (lodging, flights, car_rentals, all_trips)."
+        example: lodging
+      - name: filter_type
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - member
+          - department
+          - travel_policy
+          - custom_field
+        description: "The type of filter to apply (member, department, travel_policy, custom_field)."
+        example: custom_field
+      - name: filter_resource_id
+        in: query
+        required: false
+        schema:
+          type: integer
+        description: Required if a filter_type is given. The id corresponds to the type of the resource being filtered.
+        example: 123
+      - name: filter_value
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Required if a filter_type is custom_field. Identifies the value within the resource. Only applies to the custom_field filter.
+        example: SUMMIT 2024
+      - name: include_cancelled
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: false
+        description: Include bookings that were cancelled.
+        example: "true"
+      - name: include_cancelled
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: false
+        description: Add taxes and fees to spending and ADR.
+        example: "true"
+      responses:
+        "200":
+          description: List of top 4 locations by ADR with location and ADR.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  top_locations:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                          description: Location name
+                          example: "Kansas City, MO"
+                        adr:
+                          type: string
+                          format: decimal
+                          description: Average daily rate
+                          example: "417.58"
+                  average_adr_per_location:
+                    type: string
+                    format: decimal
+                    description: Total ADR divided by the number of locations
+                    example: "142.21"
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden - not an admin
+        "422":
+          description: Unprocessable Entity - bad parameters
+        "500":
+          description: Internal server error
+  /locations/locations_breakdown:
+    get:
+      tags:
+      - Top Locations
+      summary: Locations with detailed information
+      parameters:
+      - name: start_date
+        in: query
+        required: true
+        schema:
+          type: string
+          format: date
+        description: The start date for the summary report (YYYY-MM-DD).
+        example: 2024-01-01
+      - name: end_date
+        in: query
+        required: true
+        schema:
+          type: string
+          format: date
+        description: The end date for the summary report (YYYY-MM-DD).
+        example: 2024-12-31
+      - name: report_type
+        in: query
+        required: true
+        schema:
+          type: string
+          enum:
+          - lodging
+          - flights
+          - car_rentals
+          - all_trips
+        description: "The type of report to generate (lodging, flights, car_rentals, all_trips)."
+        example: lodging
+      - name: filter_type
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - member
+          - department
+          - travel_policy
+          - custom_field
+        description: "The type of filter to apply (member, department, travel_policy, custom_field)."
+        example: custom_field
+      - name: filter_resource_id
+        in: query
+        required: false
+        schema:
+          type: integer
+        description: Required if a filter_type is given. The id corresponds to the type of the resource being filtered.
+        example: 123
+      - name: filter_value
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Required if a filter_type is custom_field. Identifies the value within the resource. Only applies to the custom_field filter.
+        example: SUMMIT 2024
+      - name: include_cancelled
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: false
+        description: Include bookings that were cancelled.
+        example: "true"
+      - name: include_cancelled
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: false
+        description: Add taxes and fees to spending and ADR.
+        example: "true"
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: number
+          default: 10
+        description: The maximum number of results.
+        example: 20
+      - name: offset
+        in: query
+        required: false
+        schema:
+          type: number
+          default: 0
+        description: The offset between the initial data and the current result.
+        example: 40
+      - name: sort
+        in: query
+        required: false
+        schema:
+          type: string
+        description: The column used for sorting.
+        example: spending
+      - name: direction
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - asc
+          - desc
+          default: asc
+        description: The direction of the sorting.
+        example: asc
+      - name: format
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - json
+          - csv
+          default: json
+        description: The format of the response.
+        example: json
+      responses:
+        "200":
+          description: List of travel policies with details.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        location:
+                          type: string
+                          example: "Kansas City, MO"
+                        spending:
+                          type: string
+                          format: decimal
+                          example: "19756.18"
+                        savings:
+                          type: string
+                          format: decimal
+                          example: "3747.75"
+                        bookings:
+                          type: number
+                          example: 24
+                        top_booker:
+                          type: string
+                          example: Anna Banana
+                        top_traveler:
+                          type: string
+                          example: Anna Banana
+                  meta:
+                    type: object
+                    properties:
+                      limit:
+                        type: number
+                        example: 10
+                      offset:
+                        type: number
+                        example: 0
+                      total:
+                        type: number
+                        example: 35
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden - not an admin
+        "422":
+          description: Unprocessable Entity - bad parameters
+        "500":
+          description: Internal server error
+  /vendors/top_vendors_by_quantity:
+    get:
+      tags:
+      - Top Vendors
+      summary: Top vendors by quantity
+      parameters:
+      - name: start_date
+        in: query
+        required: true
+        schema:
+          type: string
+          format: date
+        description: The start date for the summary report (YYYY-MM-DD).
+        example: 2024-01-01
+      - name: end_date
+        in: query
+        required: true
+        schema:
+          type: string
+          format: date
+        description: The end date for the summary report (YYYY-MM-DD).
+        example: 2024-12-31
+      - name: report_type
+        in: query
+        required: true
+        schema:
+          type: string
+          enum:
+          - lodging
+          - flights
+          - car_rentals
+          - all_trips
+        description: "The type of report to generate (lodging, flights, car_rentals, all_trips)."
+        example: lodging
+      - name: filter_type
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - member
+          - department
+          - travel_policy
+          - custom_field
+        description: "The type of filter to apply (member, department, travel_policy, custom_field)."
+        example: custom_field
+      - name: filter_resource_id
+        in: query
+        required: false
+        schema:
+          type: integer
+        description: Required if a filter_type is given. The id corresponds to the type of the resource being filtered.
+        example: 123
+      - name: filter_value
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Required if a filter_type is custom_field. Identifies the value within the resource. Only applies to the custom_field filter.
+        example: SUMMIT 2024
+      - name: include_cancelled
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: false
+        description: Include bookings that were cancelled.
+        example: "true"
+      - name: include_cancelled
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: false
+        description: Add taxes and fees to spending and ADR.
+        example: "true"
+      responses:
+        "200":
+          description: List of top 4 vendors by quantity with number of bookings and spending with total bookings and distinct vendors
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  top_vendors:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                          description: Vendor name
+                          example: Holiday Inn
+                        bookings:
+                          type: number
+                          description: Number of bookings
+                          example: 42
+                        spending:
+                          type: string
+                          format: decimal
+                          example: "9865.44"
+                  total_bookings:
+                    type: number
+                    description: Total number of bookings in the period
+                    example: 126
+                  total_vendors:
+                    type: number
+                    description: Total number of distinct vendors in the period
+                    example: 4
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden - not an admin
+        "422":
+          description: Unprocessable Entity - bad parameters
+        "500":
+          description: Internal server error
+  /vendors/top_vendors_by_total_spend:
+    get:
+      tags:
+      - Top Vendors
+      summary: Top vendors by total spend
+      parameters:
+      - name: start_date
+        in: query
+        required: true
+        schema:
+          type: string
+          format: date
+        description: The start date for the summary report (YYYY-MM-DD).
+        example: 2024-01-01
+      - name: end_date
+        in: query
+        required: true
+        schema:
+          type: string
+          format: date
+        description: The end date for the summary report (YYYY-MM-DD).
+        example: 2024-12-31
+      - name: report_type
+        in: query
+        required: true
+        schema:
+          type: string
+          enum:
+          - lodging
+          - flights
+          - car_rentals
+          - all_trips
+        description: "The type of report to generate (lodging, flights, car_rentals, all_trips)."
+        example: lodging
+      - name: filter_type
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - member
+          - department
+          - travel_policy
+          - custom_field
+        description: "The type of filter to apply (member, department, travel_policy, custom_field)."
+        example: custom_field
+      - name: filter_resource_id
+        in: query
+        required: false
+        schema:
+          type: integer
+        description: Required if a filter_type is given. The id corresponds to the type of the resource being filtered.
+        example: 123
+      - name: filter_value
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Required if a filter_type is custom_field. Identifies the value within the resource. Only applies to the custom_field filter.
+        example: SUMMIT 2024
+      - name: include_cancelled
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: false
+        description: Include bookings that were cancelled.
+        example: "true"
+      - name: include_cancelled
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: false
+        description: Add taxes and fees to spending and ADR.
+        example: "true"
+      responses:
+        "200":
+          description: "List of top 4 vendors by spending with quantity and spending, and overall average spending."
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  top_vendors:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                          description: Vendor name
+                          example: Holiday Inn
+                        bookings:
+                          type: number
+                          description: Number of bookings
+                          example: 42
+                        spending:
+                          type: string
+                          format: decimal
+                          description: Total spending
+                          example: "9865.44"
+                  average_spending_per_vendor:
+                    type: string
+                    format: decimal
+                    description: Total spending divided by the number of vendors
+                    example: "823.68"
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden - not an admin
+        "422":
+          description: Unprocessable Entity - bad parameters
+        "500":
+          description: Internal server error
+  /vendors/top_vendors_by_savings:
+    get:
+      tags:
+      - Top Vendors
+      summary: Top vendors by savings
+      parameters:
+      - name: start_date
+        in: query
+        required: true
+        schema:
+          type: string
+          format: date
+        description: The start date for the summary report (YYYY-MM-DD).
+        example: 2024-01-01
+      - name: end_date
+        in: query
+        required: true
+        schema:
+          type: string
+          format: date
+        description: The end date for the summary report (YYYY-MM-DD).
+        example: 2024-12-31
+      - name: report_type
+        in: query
+        required: true
+        schema:
+          type: string
+          enum:
+          - lodging
+          - flights
+          - car_rentals
+          - all_trips
+        description: "The type of report to generate (lodging, flights, car_rentals, all_trips)."
+        example: lodging
+      - name: filter_type
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - member
+          - department
+          - travel_policy
+          - custom_field
+        description: "The type of filter to apply (member, department, travel_policy, custom_field)."
+        example: custom_field
+      - name: filter_resource_id
+        in: query
+        required: false
+        schema:
+          type: integer
+        description: Required if a filter_type is given. The id corresponds to the type of the resource being filtered.
+        example: 123
+      - name: filter_value
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Required if a filter_type is custom_field. Identifies the value within the resource. Only applies to the custom_field filter.
+        example: SUMMIT 2024
+      - name: include_cancelled
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: false
+        description: Include bookings that were cancelled.
+        example: "true"
+      - name: include_cancelled
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: false
+        description: Add taxes and fees to spending and ADR.
+        example: "true"
+      responses:
+        "200":
+          description: "List of top 4 vendors by savings with quantity, savings, and relative savings in percentage."
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  top_vendors:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                          description: Vendor name
+                          example: Holiday Inn
+                        savings:
+                          type: string
+                          format: decimal
+                          description: Total spending
+                          example: "9865.44"
+                        relative_savings:
+                          type: string
+                          format: decimal
+                          description: Relative savings in percentage
+                          example: "10.0"
+                  average_savings_per_vendor:
+                    type: string
+                    format: decimal
+                    description: Total savings divided by the number of vendors
+                    example: "823.68"
+                  average_relative_savings_per_vendor:
+                    type: string
+                    format: decimal
+                    description: Relative savings of the spending per savings of vendors in percentage
+                    example: "10.0"
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden - not an admin
+        "422":
+          description: Unprocessable Entity - bad parameters
+        "500":
+          description: Internal server error
+  /vendors/vendors_breakdown:
+    get:
+      tags:
+      - Top Vendors
+      summary: Vendors with detailed information
+      parameters:
+      - name: start_date
+        in: query
+        required: true
+        schema:
+          type: string
+          format: date
+        description: The start date for the summary report (YYYY-MM-DD).
+        example: 2024-01-01
+      - name: end_date
+        in: query
+        required: true
+        schema:
+          type: string
+          format: date
+        description: The end date for the summary report (YYYY-MM-DD).
+        example: 2024-12-31
+      - name: report_type
+        in: query
+        required: true
+        schema:
+          type: string
+          enum:
+          - lodging
+          - flights
+          - car_rentals
+          - all_trips
+        description: "The type of report to generate (lodging, flights, car_rentals, all_trips)."
+        example: lodging
+      - name: filter_type
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - member
+          - department
+          - travel_policy
+          - custom_field
+        description: "The type of filter to apply (member, department, travel_policy, custom_field)."
+        example: custom_field
+      - name: filter_resource_id
+        in: query
+        required: false
+        schema:
+          type: integer
+        description: Required if a filter_type is given. The id corresponds to the type of the resource being filtered.
+        example: 123
+      - name: filter_value
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Required if a filter_type is custom_field. Identifies the value within the resource. Only applies to the custom_field filter.
+        example: SUMMIT 2024
+      - name: include_cancelled
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: false
+        description: Include bookings that were cancelled.
+        example: "true"
+      - name: include_cancelled
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: false
+        description: Add taxes and fees to spending and ADR.
+        example: "true"
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: number
+          default: 10
+        description: The maximum number of results.
+        example: 20
+      - name: offset
+        in: query
+        required: false
+        schema:
+          type: number
+          default: 0
+        description: The offset between the initial data and the current result.
+        example: 40
+      - name: sort
+        in: query
+        required: false
+        schema:
+          type: string
+        description: The column used for sorting.
+        example: spending
+      - name: direction
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - asc
+          - desc
+          default: asc
+        description: The direction of the sorting.
+        example: asc
+      - name: format
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - json
+          - csv
+          default: json
+        description: The format of the response.
+        example: json
+      responses:
+        "200":
+          description: List of travel policies with details.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        vendor:
+                          type: string
+                          example: Holiday Inn
+                        location:
+                          type: string
+                          example: "Kansas City, MO"
+                        spending:
+                          type: string
+                          format: decimal
+                          example: "19756.18"
+                        savings:
+                          type: string
+                          format: decimal
+                          example: "3747.75"
+                        bookings:
+                          type: number
+                          example: 24
+                        top_booker:
+                          type: string
+                          example: Anna Banana
+                        top_traveler:
+                          type: string
+                          example: Anna Banana
+                  meta:
+                    type: object
+                    properties:
+                      limit:
+                        type: number
+                        example: 10
+                      offset:
+                        type: number
+                        example: 0
+                      total:
+                        type: number
+                        example: 35
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden - not an admin
+        "422":
+          description: Unprocessable Entity - bad parameters
+        "500":
+          description: Internal server error
+components:
+  parameters:
+    start_date:
+      name: start_date
+      in: query
+      required: true
+      schema:
+        type: string
+        format: date
+      description: The start date for the summary report (YYYY-MM-DD).
+      example: 2024-01-01
+    end_date:
+      name: end_date
+      in: query
+      required: true
+      schema:
+        type: string
+        format: date
+      description: The end date for the summary report (YYYY-MM-DD).
+      example: 2024-12-31
+    report_type:
+      name: report_type
+      in: query
+      required: true
+      schema:
+        type: string
         enum:
-        - "available"
-        - "pending"
-        - "sold"
-    xml:
-      name: "Pet"
-  Tag:
-    type: "object"
-    properties:
-      id:
-        type: "integer"
-        format: "int64"
-      name:
-        type: "string"
-    xml:
-      name: "Tag"
-  Order:
-    type: "object"
-    properties:
-      id:
-        type: "integer"
-        format: "int64"
-      petId:
-        type: "integer"
-        format: "int64"
-      quantity:
-        type: "integer"
-        format: "int32"
-      shipDate:
-        type: "string"
-        format: "date-time"
-      status:
-        type: "string"
-        description: "Order Status"
+        - lodging
+        - flights
+        - car_rentals
+        - all_trips
+      description: "The type of report to generate (lodging, flights, car_rentals, all_trips)."
+      example: lodging
+    filter_type:
+      name: filter_type
+      in: query
+      required: false
+      schema:
+        type: string
         enum:
-        - "placed"
-        - "approved"
-        - "delivered"
-      complete:
-        type: "boolean"
-    xml:
-      name: "Order"
-  User:
-    type: "object"
-    properties:
-      id:
-        type: "integer"
-        format: "int64"
-      username:
-        type: "string"
-      firstName:
-        type: "string"
-      lastName:
-        type: "string"
-      email:
-        type: "string"
-      password:
-        type: "string"
-      phone:
-        type: "string"
-      userStatus:
-        type: "integer"
-        format: "int32"
-        description: "User Status"
-    xml:
-      name: "User"
-externalDocs:
-  description: "Find out more about Swagger"
-  url: "http://swagger.io"
+        - member
+        - department
+        - travel_policy
+        - custom_field
+      description: "The type of filter to apply (member, department, travel_policy, custom_field)."
+      example: custom_field
+    filter_resource_id:
+      name: filter_resource_id
+      in: query
+      required: false
+      schema:
+        type: integer
+      description: Required if a filter_type is given. The id corresponds to the type of the resource being filtered.
+      example: 123
+    filter_value:
+      name: filter_value
+      in: query
+      required: false
+      schema:
+        type: string
+      description: Required if a filter_type is custom_field. Identifies the value within the resource. Only applies to the custom_field filter.
+      example: SUMMIT 2024
+    include_cancelled:
+      name: include_cancelled
+      in: query
+      required: false
+      schema:
+        type: boolean
+        default: false
+      description: Include bookings that were cancelled.
+      example: "true"
+    include_taxes_and_fees:
+      name: include_cancelled
+      in: query
+      required: false
+      schema:
+        type: boolean
+        default: false
+      description: Add taxes and fees to spending and ADR.
+      example: "true"
+    group_by:
+      name: group_by
+      in: query
+      required: true
+      schema:
+        type: string
+        enum:
+        - week
+        - month
+      description: The type of grouping for historical data (by week or month).
+      example: week
+    limit:
+      name: limit
+      in: query
+      required: false
+      schema:
+        type: number
+        default: 10
+      description: The maximum number of results.
+      example: 20
+    offset:
+      name: offset
+      in: query
+      required: false
+      schema:
+        type: number
+        default: 0
+      description: The offset between the initial data and the current result.
+      example: 40
+    sort:
+      name: sort
+      in: query
+      required: false
+      schema:
+        type: string
+      description: The column used for sorting.
+      example: spending
+    direction:
+      name: direction
+      in: query
+      required: false
+      schema:
+        type: string
+        enum:
+        - asc
+        - desc
+        default: asc
+      description: The direction of the sorting.
+      example: asc
+    format:
+      name: format
+      in: query
+      required: false
+      schema:
+        type: string
+        enum:
+        - json
+        - csv
+        default: json
+      description: The format of the response.
+      example: json
+  responses:
+    unauthorized:
+      description: Unauthorized
+    forbidden:
+      description: Forbidden - not an admin
+    unprocessable_entity:
+      description: Unprocessable Entity - bad parameters
+    internal_error:
+      description: Internal server error
